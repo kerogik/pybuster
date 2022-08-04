@@ -1,5 +1,6 @@
 import requests
 import sys
+import time
 
 def main():
     
@@ -14,8 +15,14 @@ def main():
         print("'-u' or '--url' is required")
         return -1
 
-    print(url)
-    print(wordlist)
+    print('\n.\n.\n.\n')
+    with open(wordlist) as file:
+        dirs = file.read().split('\n')
+    
+    for i in range(0, len(dirs)):
+        progress(i, dirs)
+        time.sleep(0.25)
+
 
 def get_wordlist():
     
