@@ -6,7 +6,9 @@ def main():
     
     wordlist = get_wordlist()
     url = get_url()
-
+    if url[-1] != '/':
+        url += '/'
+        
     if wordlist == -1:
         print("'-w' or '--wordlist' is required")
         return -1
@@ -17,11 +19,17 @@ def main():
 
     print('\n.\n.\n.\n')
     with open(wordlist) as file:
-        dirs = file.read().split('\n')
+        dirs = file.read().strip().split('\n')
     
     for i in range(0, len(dirs)):
-        progress(i, dirs)
-        time.sleep(0.25)
+        
+        response = make_request(url,dirs[i])
+        status_code = str(response.status_code)
+        progress(i, url, dirs, status_code)
+
+def make_request(url, lookup):
+    response = requests.get(url+lookup)
+    return response
 
 
 def get_wordlist():
@@ -52,15 +60,21 @@ def help():
         print('\nExample of usage:\npython3 pybuster.py --wordlist /usr/share/dirb/wordlists/common.txt -u localhost')
     return 0
 
-def progress(x, dirs):
+def progress(x, url, dirs, status_code):
     if x % 3 == 0:
         l_r_progress = '\\'
     elif x % 3 == 1:
         l_r_progress = '/'
     else:
         l_r_progress = '-' 
-    sys.stdout.write('\r'+dirs[x]+' '*(25-len(dirs[x]))+ 'Processing '+ l_r_progress + '   ')
-    sys.stdout.flush()
+    
+    if status_code != '404':
+        sys.stdout.write('\r' + 'Found: ' + url+ dirs[x] + ' '*(25-len(dirs[x]))+ status_code + ' '*10 + '\n')
+        sys.stdout.flush()
+    else:
+        sys.stdout.write('\r'+dirs[x]+' '*(25-len(dirs[x]))+ status_code + '   ' + 'Processing '+ l_r_progress + '   ')
+        sys.stdout.flush()
+    
 
 if __name__ == "__main__":
     
