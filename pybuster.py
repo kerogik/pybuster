@@ -8,7 +8,7 @@ def main():
     url = get_url()
     if url[-1] != '/':
         url += '/'
-        
+
     if wordlist == -1:
         print("'-w' or '--wordlist' is required")
         return -1
@@ -21,16 +21,16 @@ def main():
     with open(wordlist) as file:
         dirs = file.read().strip().split('\n')
     
+    session = requests.Session()
+    
     for i in range(0, len(dirs)):
-        
-        response = make_request(url,dirs[i])
+        response = make_request(url,dirs[i], session)
         status_code = str(response.status_code)
         progress(i, url, dirs, status_code)
 
-def make_request(url, lookup):
-    response = requests.get(url+lookup)
+def make_request(url, lookup, session):
+    response = session.get(url+lookup)
     return response
-
 
 def get_wordlist():
     
@@ -74,7 +74,6 @@ def progress(x, url, dirs, status_code):
     else:
         sys.stdout.write('\r'+dirs[x]+' '*(25-len(dirs[x]))+ status_code + '   ' + 'Processing '+ l_r_progress + '   ')
         sys.stdout.flush()
-    
 
 if __name__ == "__main__":
     
