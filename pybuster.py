@@ -45,6 +45,16 @@ def help():
         print('\nExample of usage:\npython3 pybuster.py --wordlist /usr/share/dirb/wordlists/common.txt -u localhost')
     return 0
 
+def progress(x, dirs):
+    if x % 3 == 0:
+        l_r_progress = '\\'
+    elif x % 3 == 1:
+        l_r_progress = '/'
+    else:
+        l_r_progress = '-' 
+    sys.stdout.write('\r'+dirs[x]+' '*(25-len(dirs[x]))+ 'Processing '+ l_r_progress + '   ')
+    sys.stdout.flush()
+
 if __name__ == "__main__":
     
     banner = """
