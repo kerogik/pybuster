@@ -6,8 +6,6 @@ def main():
     
     wordlist = get_wordlist()
     url = get_url()
-    if url[-1] != '/':
-        url += '/'
 
     if wordlist == -1:
         print("'-w' or '--wordlist' is required")
@@ -16,7 +14,10 @@ def main():
     if url == -1:
         print("'-u' or '--url' is required")
         return -1
-
+    
+    if url[-1] != '/':
+        url += '/'
+    
     print('\n.\n.\n.\n')
     with open(wordlist) as file:
         dirs = file.read().strip().split('\n')
